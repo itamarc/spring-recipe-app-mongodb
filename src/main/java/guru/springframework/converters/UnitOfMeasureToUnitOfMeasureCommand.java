@@ -8,17 +8,17 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UnitOfMeasureCommandToUnitOfMeasure implements Converter<UnitOfMeasureCommand, UnitOfMeasure> {
+public class UnitOfMeasureToUnitOfMeasureCommand implements Converter<UnitOfMeasure, UnitOfMeasureCommand> {
     @Synchronized
     @Nullable
     @Override
-    public UnitOfMeasure convert(UnitOfMeasureCommand source) {
+    public UnitOfMeasureCommand convert(UnitOfMeasure source) {
         if (source == null) {
             return null;
         }
-        UnitOfMeasure uom = new UnitOfMeasure();
-        uom.setId(source.getId());
-        uom.setDescription(source.getDescription());
-        return uom;
+        UnitOfMeasureCommand uomCommand = new UnitOfMeasureCommand();
+        uomCommand.setId(source.getId());
+        uomCommand.setDescription(source.getDescription());
+        return uomCommand;
     }
 }
