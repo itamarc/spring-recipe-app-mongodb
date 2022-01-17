@@ -1,6 +1,5 @@
 package guru.springframework.converters;
 
-import guru.springframework.commands.CategoryCommand;
 import guru.springframework.commands.UnitOfMeasureCommand;
 import guru.springframework.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;

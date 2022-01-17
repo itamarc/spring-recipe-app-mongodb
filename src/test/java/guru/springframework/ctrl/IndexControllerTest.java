@@ -6,6 +6,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -30,6 +31,9 @@ class IndexControllerTest {
 
     @Mock
     Model model;
+
+    @Captor
+    ArgumentCaptor<Set<Recipe>> argumentCaptor;
 
     AutoCloseable closeable;
 
@@ -64,8 +68,6 @@ class IndexControllerTest {
         recipes.add(recipe2);
         when(service.getRecipes()).thenReturn(recipes);
         String expected = "index";
-
-        ArgumentCaptor<Set<Recipe>> argumentCaptor = ArgumentCaptor.forClass(Set.class);
 
         // when
         String returned = controller.getIndexPage(model);
