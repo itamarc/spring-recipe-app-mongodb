@@ -2,6 +2,7 @@ package guru.springframework.converters;
 
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.domain.Ingredient;
+import guru.springframework.domain.Recipe;
 import guru.springframework.domain.UnitOfMeasure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,6 +38,9 @@ class IngredientToIngredientCommandTest extends GenericConverterTest {
         uom.setId(UOM_ID);
         uom.setDescription(UOM_DESCRIPTION);
         ingredient.setUom(uom);
+        Recipe recipe = new Recipe();
+        recipe.setId(RECIPE_ID);
+        ingredient.setRecipe(recipe);
 
         // when
         IngredientCommand ingredientCommand = ingredientConverter.convert(ingredient);
@@ -48,5 +52,6 @@ class IngredientToIngredientCommandTest extends GenericConverterTest {
         assertEquals(INGREDIENT_DESCRIPTION, ingredientCommand.getDescription());
         assertEquals(INGREDIENT_AMOUNT, ingredientCommand.getAmount());
         assertEquals(UOM_ID, ingredientCommand.getUom().getId());
+        assertEquals(RECIPE_ID, ingredientCommand.getRecipeId());
     }
 }
