@@ -2,6 +2,9 @@ package guru.springframework.ctrl;
 
 import guru.springframework.commands.IngredientCommand;
 import guru.springframework.commands.RecipeCommand;
+import guru.springframework.converters.*;
+import guru.springframework.domain.Ingredient;
+import guru.springframework.domain.Recipe;
 import guru.springframework.services.IngredientService;
 import guru.springframework.services.RecipeService;
 import guru.springframework.services.UnitOfMeasureService;
@@ -16,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.HashSet;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -33,6 +37,8 @@ public class IngredientControllerTest {
     @Mock
     UnitOfMeasureService unitOfMeasureService;
 
+    RecipeToRecipeCommand recipeToRecipeCommand;
+
     IngredientController controller;
 
     MockMvc mockMvc;
@@ -43,6 +49,10 @@ public class IngredientControllerTest {
     void setUp() {
         closeable = MockitoAnnotations.openMocks(this);
         controller = new IngredientController(recipeService, ingredientService, unitOfMeasureService);
+        recipeToRecipeCommand = new RecipeToRecipeCommand(
+                new NotesToNotesCommand(),
+                new CategoryToCategoryCommand(),
+                new IngredientToIngredientCommand(new UnitOfMeasureToUnitOfMeasureCommand()));
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
     }
 
@@ -137,5 +147,37 @@ public class IngredientControllerTest {
                 )
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/recipe/2/ingredient/3/show"));
+    }
+
+    @Test
+    void deleteIngredient() throws Exception {
+        // given
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+
+        Ingredient ingredient1 = new Ingredient();
+        ingredient1.setId(1L);
+
+        Ingredient ingredient2 = new Ingredient();
+        ingredient2.setId(2L);
+
+        Ingredient ingredient3 = new Ingredient();
+        ingredient3.setId(3L);
+
+        recipe.addIngredient(ingredient1);
+        recipe.addIngredient(ingredient2);
+        recipe.addIngredient(ingredient3);
+
+        RecipeCommand recipeCommand = recipeToRecipeCommand.convert(recipe);
+
+        // when
+        when(ingredientService.deleteByRecipeIdAndIngredientId(anyLong(), anyLong())).thenReturn(recipeCommand);
+
+        // then
+        mockMvc.perform(get("/recipe/1/ingredient/2/delete"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("recipe/ingredient/list"))
+                .andExpect(model().attributeExists("recipe"));
+        verify(ingredientService, times(1)).deleteByRecipeIdAndIngredientId(anyLong(), anyLong());
     }
 }

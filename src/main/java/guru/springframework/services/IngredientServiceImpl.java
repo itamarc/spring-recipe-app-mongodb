@@ -1,8 +1,10 @@
 package guru.springframework.services;
 
 import guru.springframework.commands.IngredientCommand;
+import guru.springframework.commands.RecipeCommand;
 import guru.springframework.converters.IngredientCommandToIngredient;
 import guru.springframework.converters.IngredientToIngredientCommand;
+import guru.springframework.converters.RecipeToRecipeCommand;
 import guru.springframework.domain.Ingredient;
 import guru.springframework.domain.Recipe;
 import guru.springframework.repositories.RecipeRepository;
@@ -11,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /*
  * Created by itamar at 2022-01-26
@@ -20,14 +24,18 @@ import java.util.Optional;
 public class IngredientServiceImpl implements IngredientService {
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
     private final RecipeRepository recipeRepository;
     private final UnitOfMeasureRepository unitOfMeasureRepository;
 
     public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand,
-                                 IngredientCommandToIngredient ingredientCommandToIngredient, RecipeRepository recipeRepository,
+                                 IngredientCommandToIngredient ingredientCommandToIngredient,
+                                 RecipeToRecipeCommand recipeToRecipeCommand,
+                                 RecipeRepository recipeRepository,
                                  UnitOfMeasureRepository unitOfMeasureRepository) {
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
         this.ingredientCommandToIngredient = ingredientCommandToIngredient;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
         this.recipeRepository = recipeRepository;
         this.unitOfMeasureRepository = unitOfMeasureRepository;
     }
@@ -97,6 +105,39 @@ public class IngredientServiceImpl implements IngredientService {
 
             // to check for fail
             return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+        }
+    }
+
+    @Override
+    public RecipeCommand deleteByRecipeIdAndIngredientId(Long recipeId, Long ingredientId) {
+        // find recipe
+        Optional<Recipe> recipeOptional = recipeRepository.findById(recipeId);
+
+        if (!recipeOptional.isPresent()) {
+            // TODO Toss error if not found!
+            log.error("Recipe not found for ID: " + recipeId);
+            return new RecipeCommand();
+        } else {
+            Recipe recipe = recipeOptional.get();
+
+            // remove ingredient
+            Optional<Ingredient> ingredientOptional = recipe.getIngredients().stream()
+                    .filter(ingredient -> ingredient.getId().equals(ingredientId))
+                    .findFirst();
+            if (ingredientOptional.isPresent()) {
+                Ingredient ingredientToDelete = ingredientOptional.get();
+                recipe.getIngredients().remove(ingredientToDelete);
+                ingredientToDelete.setRecipe(null);
+
+                // save recipe
+                Recipe savedRecipe = recipeRepository.save(recipe);
+                log.debug("Removed ingredient with ID: " + ingredientId);
+
+                return recipeToRecipeCommand.convert(savedRecipe);
+            } else {
+                log.error("Ingredient not found with ID: " + ingredientId);
+                return recipeToRecipeCommand.convert(recipe);
+            }
         }
     }
 }
