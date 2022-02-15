@@ -64,6 +64,13 @@ class RecipeControllerTest {
     }
 
     @Test
+    void getRecipeNumberFormatException() throws Exception {
+        mockMvc.perform(get("/recipe/foo/show"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
+    }
+
+    @Test
     public void getNewRecipeForm() throws Exception {
         mockMvc.perform(get("/recipe/new"))
                 .andExpect(status().isOk())
@@ -100,11 +107,25 @@ class RecipeControllerTest {
     }
 
     @Test
+    void getUpdateRecipeNumberFormatException() throws Exception {
+        mockMvc.perform(get("/recipe/foo/update"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
+    }
+
+    @Test
     public void deleteAction() throws Exception {
         mockMvc.perform(get("/recipe/1/delete"))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
         verify(recipeService, times(1)).deleteById(anyLong());
+    }
+
+    @Test
+    void deleteRecipeNumberFormatException() throws Exception {
+        mockMvc.perform(get("/recipe/foo/delete"))
+                .andExpect(status().isBadRequest())
+                .andExpect(view().name("400error"));
     }
 }
