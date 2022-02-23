@@ -109,6 +109,7 @@ class RecipeControllerTest {
                                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                                 .param("id", "")
                                 .param("description", "some string")
+                                .param("cookTime", "3000")
                 )
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("recipe"))
