@@ -27,7 +27,7 @@ jobs:
           name: Test
           command: mvn integration-test cobertura:cobertura
       - store_test_results:
-          target/surefire-reports
+          path: target/surefire-reports
       - run:
           name: Send to Codecov
           command: curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov && ./codecov
