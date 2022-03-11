@@ -7,9 +7,9 @@ import guru.springframework.commands.RecipeCommand;
  * Created by itamar at 2022-01-26
  */
 public interface IngredientService {
-    IngredientCommand findByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
+    IngredientCommand findByRecipeIdAndIngredientId(String recipeId, String ingredientId);
 
     IngredientCommand saveIngredientCommand(IngredientCommand ingredient);
 
-    RecipeCommand deleteByRecipeIdAndIngredientId(Long recipeId, Long ingredientId);
+    RecipeCommand deleteByRecipeIdAndIngredientId(String recipeId, String ingredientId);
 }

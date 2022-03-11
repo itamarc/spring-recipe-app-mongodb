@@ -38,7 +38,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeSet;
     }
 
-    public Recipe findById(Long id) {
+    public Recipe findById(String id) {
         Optional<Recipe> recipeOptional = recipeRepository.findById(id);
 
         if (!recipeOptional.isPresent()) {
@@ -49,7 +49,7 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     @Transactional
-    public RecipeCommand findCommandById(long id) {
+    public RecipeCommand findCommandById(String id) {
         return recipeToRecipeCommand.convert(findById(id));
     }
 
@@ -62,7 +62,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeToRecipeCommand.convert(savedRecipe);
     }
 
-    public void deleteById(Long id) {
+    public void deleteById(String id) {
         recipeRepository.deleteById(id);
         log.debug("Deleted Recipe with Id:" + id);
     }

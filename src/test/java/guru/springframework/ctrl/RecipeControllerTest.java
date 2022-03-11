@@ -6,6 +6,7 @@ import guru.springframework.exceptions.NotFoundException;
 import guru.springframework.services.RecipeService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -45,9 +46,9 @@ class RecipeControllerTest {
     @Test
     void showById() throws Exception {
         Recipe recipe = new Recipe();
-        recipe.setId(1L);
+        recipe.setId("1");
 
-        when(recipeService.findById(anyLong())).thenReturn(recipe);
+        when(recipeService.findById(anyString())).thenReturn(recipe);
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isOk())
@@ -57,7 +58,7 @@ class RecipeControllerTest {
 
     @Test
     void getRecipeNotFound() throws Exception {
-        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+        when(recipeService.findById(anyString())).thenThrow(NotFoundException.class);
 
         mockMvc.perform(get("/recipe/1/show"))
                 .andExpect(status().isNotFound())
@@ -65,6 +66,7 @@ class RecipeControllerTest {
     }
 
     @Test
+    @Disabled
     void getRecipeNumberFormatException() throws Exception {
         mockMvc.perform(get("/recipe/foo/show"))
                 .andExpect(status().isBadRequest())
@@ -82,7 +84,7 @@ class RecipeControllerTest {
     @Test
     public void postNewRecipeForm() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(2L);
+        command.setId("2");
 
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
@@ -100,7 +102,7 @@ class RecipeControllerTest {
     @Test
     public void postNewRecipeFormValidationFail() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(2L);
+        command.setId("2");
 
         when(recipeService.saveRecipeCommand(any())).thenReturn(command);
 
@@ -119,9 +121,9 @@ class RecipeControllerTest {
     @Test
     public void getUpdateView() throws Exception {
         RecipeCommand command = new RecipeCommand();
-        command.setId(2L);
+        command.setId("2");
 
-        when(recipeService.findCommandById(anyLong())).thenReturn(command);
+        when(recipeService.findCommandById(anyString())).thenReturn(command);
 
         mockMvc.perform(get("/recipe/1/update"))
                 .andExpect(status().isOk())
@@ -130,6 +132,7 @@ class RecipeControllerTest {
     }
 
     @Test
+    @Disabled
     void getUpdateRecipeNumberFormatException() throws Exception {
         mockMvc.perform(get("/recipe/foo/update"))
                 .andExpect(status().isBadRequest())
@@ -142,10 +145,11 @@ class RecipeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"));
 
-        verify(recipeService, times(1)).deleteById(anyLong());
+        verify(recipeService, times(1)).deleteById(anyString());
     }
 
     @Test
+    @Disabled
     void deleteRecipeNumberFormatException() throws Exception {
         mockMvc.perform(get("/recipe/foo/delete"))
                 .andExpect(status().isBadRequest())

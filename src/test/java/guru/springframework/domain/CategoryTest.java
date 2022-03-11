@@ -19,7 +19,7 @@ class CategoryTest {
 
     @Test
     void getId() {
-        Long idValue = 4L;
+        String idValue = "4";
         category.setId(idValue);
         assertEquals(idValue, category.getId());
     }
@@ -35,10 +35,10 @@ class CategoryTest {
     void getRecipes() {
         Set<Recipe> recipes = new HashSet<>();
         Recipe recipe1 = new Recipe();
-        recipe1.setId(5L);
+        recipe1.setId("5");
         recipes.add(recipe1);
         Recipe recipe2 = new Recipe();
-        recipe2.setId(6L);
+        recipe2.setId("6");
         recipes.add(recipe2);
         category.setRecipes(recipes);
         assertArrayEquals(recipes.toArray(), category.getRecipes().toArray());

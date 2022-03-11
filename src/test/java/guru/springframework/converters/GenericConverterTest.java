@@ -6,20 +6,20 @@ import guru.springframework.domain.Difficulty;
 
 public class GenericConverterTest {
     // category
-    protected static final Long CATEGORY_ID = 10L;
+    protected static final String CATEGORY_ID = "10";
     protected static final String CATEGORY_DESCRIPTION = "Sandwich";
     // notes
-    protected static final Long NOTES_ID = 11L;
+    protected static final String NOTES_ID = "11";
     protected static final String RECIPE_NOTES = "Some random fake recipe notes.";
     // uom
-    protected static final Long UOM_ID = 12L;
+    protected static final String UOM_ID = "12";
     protected static final String UOM_DESCRIPTION = "Teaspoon";
     // ingredient
-    protected static final Long INGREDIENT_ID = 13L;
+    protected static final String INGREDIENT_ID = "13";
     protected static final String INGREDIENT_DESCRIPTION = "Pepper";
     protected static final BigDecimal INGREDIENT_AMOUNT = BigDecimal.valueOf(1.23);
     // recipe
-    protected static final Long RECIPE_ID = 14L;
+    protected static final String RECIPE_ID = "14";
     protected static final String RECIPE_DESCRIPTION = "Some random fake recipe";
     protected static final Integer RECIPE_PREPTIME = 30;
     protected static final Integer RECIPE_COOKTIME = 60;
