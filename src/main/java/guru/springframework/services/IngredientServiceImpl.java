@@ -57,6 +57,8 @@ public class IngredientServiceImpl implements IngredientService {
         if (!ingredientCommandOptional.isPresent()) {
             // TODO impl error handling
             log.error("Ingredient ID not found: " + ingredientId);
+        } else {
+            ingredientCommandOptional.get().setRecipeId(recipeId);
         }
 
         return ingredientCommandOptional.orElse(null);
@@ -85,7 +87,6 @@ public class IngredientServiceImpl implements IngredientService {
                         .orElseThrow(() -> new RuntimeException("Unit of Measure not found!"))); // TODO address this
             } else {
                 Ingredient ingredient = ingredientCommandToIngredient.convert(command);
-                ingredient.setRecipe(recipe);
                 recipe.addIngredient(ingredient);
             }
 
@@ -104,7 +105,9 @@ public class IngredientServiceImpl implements IngredientService {
             }
 
             // to check for fail
-            return ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+            IngredientCommand savedIngredient = ingredientToIngredientCommand.convert(savedIngredientOptional.get());
+            savedIngredient.setRecipeId(recipe.getId());
+            return savedIngredient;
         }
     }
 
@@ -127,7 +130,6 @@ public class IngredientServiceImpl implements IngredientService {
             if (ingredientOptional.isPresent()) {
                 Ingredient ingredientToDelete = ingredientOptional.get();
                 recipe.getIngredients().remove(ingredientToDelete);
-                ingredientToDelete.setRecipe(null);
 
                 // save recipe
                 Recipe savedRecipe = recipeRepository.save(recipe);

@@ -1,18 +1,14 @@
 package guru.springframework.converters;
 
-import guru.springframework.commands.CategoryCommand;
-import guru.springframework.commands.IngredientCommand;
-import guru.springframework.commands.NotesCommand;
-import guru.springframework.commands.RecipeCommand;
-import guru.springframework.commands.UnitOfMeasureCommand;
+import guru.springframework.commands.*;
 import guru.springframework.domain.Recipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.util.HashSet;
-import java.util.Set;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RecipeCommandToRecipeTest extends GenericConverterTest {
     RecipeCommandToRecipe recipeConverter;
@@ -62,14 +58,14 @@ class RecipeCommandToRecipeTest extends GenericConverterTest {
         uomCommand.setId(UOM_ID);
         uomCommand.setDescription(UOM_DESCRIPTION);
         ingredientCommand.setUom(uomCommand);
-        Set<IngredientCommand> ingredientCommands = new HashSet<>();
+        List<IngredientCommand> ingredientCommands = new ArrayList<>();
         ingredientCommands.add(ingredientCommand);
         recipeCommand.setIngredients(ingredientCommands);
 
         CategoryCommand categoryCommand = new CategoryCommand();
         categoryCommand.setId(CATEGORY_ID);
         categoryCommand.setDescription(CATEGORY_DESCRIPTION);
-        Set<CategoryCommand> categories = new HashSet<>();
+        List<CategoryCommand> categories = new ArrayList<>();
         categories.add(categoryCommand);
         recipeCommand.setCategories(categories);
 
